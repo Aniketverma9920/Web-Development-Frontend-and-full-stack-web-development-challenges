@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Responsive + Backend Integration</title>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ HEADER -->
+  <header class="bg-white shadow-md fixed top-0 left-0 w-full z-10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600">SmartTech</h1>
+      <nav class="hidden md:flex gap-6 font-medium">
+        <a href="#" class="hover:text-blue-600">Home</a>
+        <a href="#" class="hover:text-blue-600">About</a>
+        <a href="#" class="hover:text-blue-600">Services</a>
+        <a href="#" class="hover:text-blue-600">Contact</a>
+      </nav>
+      <button class="md:hidden text-3xl text-blue-600">☰</button>
+    </div>
+  </header>
+
+  <!-- ✅ HERO -->
+  <section class="pt-24 pb-16 px-6 bg-gradient-to-r from-blue-600 to-indigo-500 text-white text-center">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Dynamic IoT Products</h1>
+      <p class="text-lg sm:text-xl mb-6">
+        This page loads content directly from a dummy backend API.
+      </p>
+      <button class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition">
+        Explore Products
+      </button>
+    </div>
+  </section>
+
+  <!-- ✅ DYNAMIC CONTENT SECTION -->
+  <section class="py-16 container mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center text-blue-600 mb-10">Latest Products</h2>
+    <div id="product-container" class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Products will load here dynamically -->
+    </div>
+  </section>
+
+  <!-- ✅ FOOTER -->
+  <footer class="bg-blue-600 text-white py-6 text-center">
+    <p>© 2025 SmartTech. Connected to Mock API.</p>
+  </footer>
+
+  <!-- ✅ SCRIPT FOR BACKEND INTEGRATION -->
+  <script>
+    // Dummy backend endpoint (free mock API)
+    const API_URL = "https://jsonplaceholder.typicode.com/posts";
+
+    const container = document.getElementById("product-container");
+
+    // Fetch data dynamically
+    async function loadProducts() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        // Pick first 6 items for demo
+        const products = data.slice(0, 6);
+
+        // Generate HTML dynamically
+        products.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "bg-white p-6 rounded-2xl shadow hover:shadow-lg transition";
+          card.innerHTML = `
+            <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+                 alt="IoT Device" class="w-16 mx-auto mb-4" />
+            <h3 class="text-xl font-bold mb-2 text-center">${item.title.substring(0, 20)}...</h3>
+            <p class="text-center text-gray-600">${item.body.substring(0, 80)}...</p>
+          `;
+          container.appendChild(card);
+        });
+      } catch (error) {
+        container.innerHTML = `<p class="text-center text-red-500">Error loading data 😞</p>`;
+        console.error(error);
+      }
+    }
+
+    // Load data on page load
+    loadProducts();
+  </script>
+</body>
+</html>
