@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>SmartTech – Responsive Dynamic Website</title>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- ✅ NAVBAR -->
+  <header class="bg-white shadow-md fixed top-0 left-0 w-full z-10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600">SmartTech</h1>
+      <nav class="hidden md:flex gap-6 font-medium">
+        <a href="#" class="hover:text-blue-600">Home</a>
+        <a href="#" class="hover:text-blue-600">About</a>
+        <a href="#" class="hover:text-blue-600">Products</a>
+        <a href="#" class="hover:text-blue-600">Contact</a>
+      </nav>
+      <button class="md:hidden text-3xl text-blue-600">☰</button>
+    </div>
+  </header>
+
+  <!-- ✅ HERO SECTION -->
+  <section class="pt-24 pb-16 px-6 bg-gradient-to-r from-blue-600 to-indigo-500 text-white text-center">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">SmartTech IoT Solutions</h1>
+      <p class="text-lg sm:text-xl mb-6">
+        Responsive | Dynamic | Deploy-Ready – powered by TailwindCSS + Mock API
+      </p>
+      <a href="#products">
+        <button class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition">
+          View Products
+        </button>
+      </a>
+    </div>
+  </section>
+
+  <!-- ✅ DYNAMIC PRODUCTS SECTION -->
+  <section id="products" class="py-16 container mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center text-blue-600 mb-10">Latest Products</h2>
+    <div id="product-container" class="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Dynamic cards load here -->
+    </div>
+  </section>
+
+  <!-- ✅ CONTACT SECTION -->
+  <section class="py-16 bg-gray-100 text-center">
+    <h2 class="text-3xl font-bold text-blue-600 mb-6">Contact Us</h2>
+    <form class="max-w-md mx-auto space-y-4">
+      <input type="text" placeholder="Your Name" required
+             class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+      <input type="email" placeholder="Your Email" required
+             class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+      <textarea placeholder="Your Message" rows="4"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+      <button type="submit"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+        Send Message
+      </button>
+    </form>
+  </section>
+
+  <!-- ✅ FOOTER -->
+  <footer class="bg-blue-600 text-white py-6 text-center">
+    <p>© 2025 SmartTech | Built with TailwindCSS & Mock API</p>
+  </footer>
+
+  <!-- ✅ SCRIPT FOR DYNAMIC CONTENT -->
+  <script>
+    const container = document.getElementById("product-container");
+    const API_URL = "https://jsonplaceholder.typicode.com/posts";
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const products = data.slice(0, 6); // first 6 dummy items
+
+        products.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "bg-white p-6 rounded-2xl shadow hover:shadow-lg transition";
+          card.innerHTML = `
+            <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+                 alt="IoT Device" class="w-16 mx-auto mb-4" />
+            <h3 class="text-xl font-bold mb-2 text-center">${item.title.substring(0, 20)}...</h3>
+            <p class="text-center text-gray-600">${item.body.substring(0, 80)}...</p>
+          `;
+          container.appendChild(card);
+        });
+      } catch (err) {
+        container.innerHTML = `<p class="text-center text-red-500">Error loading data 😞</p>`;
+        console.error(err);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
