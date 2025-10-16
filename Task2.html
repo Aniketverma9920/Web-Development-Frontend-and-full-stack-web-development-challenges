@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Listing with Filters</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], select, input[type="range"] {
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .price-value {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .product:hover {
+      transform: scale(1.05);
+    }
+
+    .product img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .product h3 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+    }
+
+    .product p {
+      margin: 0;
+      color: #777;
+    }
+
+    .price {
+      color: #2a9d8f;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛍️ Product Listing with Filters</h1>
+
+  <div class="filters">
+    <input type="text" id="search" placeholder="Search products..." />
+    
+    <select id="category">
+      <option value="all">All Categories</option>
+      <option value="electronics">Electronics</option>
+      <option value="fashion">Fashion</option>
+      <option value="home">Home</option>
+    </select>
+
+    <div>
+      <label>Max Price: <span class="price-value" id="priceValue">1000</span></label><br>
+      <input type="range" id="priceRange" min="100" max="1000" value="1000" />
+    </div>
+  </div>
+
+  <div class="products" id="productList"></div>
+
+  <script>
+    const products = [
+      { id: 1, name: "Smartphone", category: "electronics", price: 800, image: "https://picsum.photos/200?1" },
+      { id: 2, name: "Headphones", category: "electronics", price: 300, image: "https://picsum.photos/200?2" },
+      { id: 3, name: "T-Shirt", category: "fashion", price: 150, image: "https://picsum.photos/200?3" },
+      { id: 4, name: "Jeans", category: "fashion", price: 400, image: "https://picsum.photos/200?4" },
+      { id: 5, name: "Microwave", category: "home", price: 700, image: "https://picsum.photos/200?5" },
+      { id: 6, name: "Sofa", category: "home", price: 950, image: "https://picsum.photos/200?6" },
+    ];
+
+    const productList = document.getElementById("productList");
+    const search = document.getElementById("search");
+    const category = document.getElementById("category");
+    const priceRange = document.getElementById("priceRange");
+    const priceValue = document.getElementById("priceValue");
+
+    function displayProducts(items) {
+      productList.innerHTML = "";
+      if (items.length === 0) {
+        productList.innerHTML = "<p>No products found 🥲</p>";
+        return;
+      }
+      items.forEach(p => {
+        productList.innerHTML += `
+          <div class="product">
+            <img src="${p.image}" alt="${p.name}" />
+            <h3>${p.name}</h3>
+            <p>${p.category}</p>
+            <div class="price">₹${p.price}</div>
+          </div>`;
+      });
+    }
+
+    function filterProducts() {
+      let searchText = search.value.toLowerCase();
+      let selectedCategory = category.value;
+      let maxPrice = parseInt(priceRange.value);
+
+      const filtered = products.filter(p => 
+        p.name.toLowerCase().includes(searchText) &&
+        (selectedCategory === "all" || p.category === selectedCategory) &&
+        p.price <= maxPrice
+      );
+
+      displayProducts(filtered);
+    }
+
+    search.addEventListener("input", filterProducts);
+    category.addEventListener("change", filterProducts);
+    priceRange.addEventListener("input", () => {
+      priceValue.textContent = priceRange.value;
+      filterProducts();
+    });
+
+    displayProducts(products);
+  </script>
+</body>
+</html>
